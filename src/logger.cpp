@@ -2,7 +2,8 @@
 #include <iostream>
 #include <ctime>
 
-Logger::Logger() {
+Logger::Logger() 
+{
     m_logFile.open("server.log", std::ios::app);  // append mode
 }
 
@@ -28,9 +29,10 @@ void Logger::log(Logger::Level level , const std::string& message)
   
 }
 
-std::string Logger::levelToString(Logger::Level level){
-       switch(level) 
-       {
+std::string Logger::levelToString(Logger::Level level)
+{
+    switch(level) 
+    {
         case Level::INFO:  return "INFO";
         case Level::WARN:  return "WARN";
         case Level::ERROR: return "ERROR";

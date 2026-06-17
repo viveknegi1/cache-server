@@ -17,6 +17,7 @@ CommandParser::ParsedCommand CommandParser::parse(const std::string& rawCommandS
  {
     CommandParser::ParsedCommand parsedResult;
     std::string cleanedString = rawCommandString;
+    // Raw strings can have '\r\n at the end. So cleaning up them for better parsing
     while (!cleanedString.empty() && (cleanedString.back() == '\n' || cleanedString.back() == '\r')) {
         cleanedString.pop_back();
     }
@@ -25,27 +26,29 @@ CommandParser::ParsedCommand CommandParser::parse(const std::string& rawCommandS
     std::string commandString = cleanedString.substr(0, firstSpacePos);
     auto command = stringToCommandType(commandString);
 
-    if(firstSpacePos == std::string::npos) {
-    // no arguments
-    parsedResult.type = command;
-    return parsedResult;  // args is empty by default
+    if(firstSpacePos == std::string::npos) 
+    {
+        // This command have no arguments. So return early.
+        parsedResult.type = command;
+        return parsedResult;  
     }
 
     std::string argumentSubstring = cleanedString.substr(firstSpacePos + 1);
     std::vector<std::string> argumentList;
     std::string currentArgument;
-    for( auto& c : argumentSubstring)
+    for( auto& character : argumentSubstring)
     {
-        if(c == ' ')
+        if(character == ' ')
         {
            argumentList.push_back(currentArgument) ;
            currentArgument = "";
         }
         else
         {
-            currentArgument += c ;
+            currentArgument += character ;
         }
     }
+    // We have recieved final 'space' . Push remaining argument to the vector.
     argumentList.push_back(currentArgument) ;
     parsedResult.type = command ;
     parsedResult.args = argumentList ;

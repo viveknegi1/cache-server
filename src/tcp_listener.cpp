@@ -5,16 +5,15 @@
 #include "logger.h"
 
 TcpListener::TcpListener(int port) {
-
     m_port = port;
     m_socket = -1; // No socket created yet
-
-
 }
 
 bool TcpListener::initialize() {
+
     m_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (m_socket == -1) {
+    if (m_socket == -1) 
+    {
         Logger::getInstance().log(Logger::Level::ERROR, "Failed to create socket");
         return false;
     }
@@ -47,7 +46,6 @@ bool TcpListener::bindSocket()
 
 bool TcpListener::startListening()
 {
-
     int backlog = 10 ; // queue size 
     int result = listen(m_socket, backlog);
     if( result == -1)
@@ -57,7 +55,6 @@ bool TcpListener::startListening()
     }
 
     return true ;
-
 }
 
 int TcpListener::acceptConnection()
@@ -74,7 +71,6 @@ int TcpListener::acceptConnection()
     }
 
     return clientFd;
-
 }
 
 
@@ -85,7 +81,6 @@ TcpListener::~TcpListener()
         close(m_socket);
     }
     m_socket = -1;  
-
 }
 
 
