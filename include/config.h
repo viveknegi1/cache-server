@@ -1,0 +1,22 @@
+#pragma once
+#include<string>
+
+class Config{
+
+public:
+    static Config&  getInstance(const std::string& configFilePath  = " ");
+    int getPort() const ; 
+    std::string getRootDirectory() const ; 
+    int getThreadCount() const ;
+
+private:
+    int m_port;
+    int m_threadCount;
+    std::string m_rootDirectory;
+    void parse(const std::string& configFilePath);
+    Config(const std::string& configFilePath);
+
+    Config(const Config&) = delete; // delete copy constructor
+    Config& operator=(const Config&) = delete; // delete operator = 
+
+};
