@@ -108,8 +108,8 @@ cache-server/
 
 ## ✅ Current Status
 
-**Current Phase:** 0 — Not started
-**Status:** Not started
+**Current Phase:** 2 
+**Status:** completed
 
 ### Prerequisites before starting
 - [ ] Push HTTP server project to GitHub
@@ -138,7 +138,7 @@ cache-server/
 | Concept | Introduced in Phase | Understood? |
 |---------|--------------------:|-------------|
 | Templates | 2 | — |
-| Move semantics | 2 | — |
+| Move semantics | 2 | X |
 | `std::chrono` | 3 | — |
 | `std::variant` | 1 | — |
 | Binary serialization | 4 | — |
@@ -169,4 +169,4 @@ Combined with your HTTP server, you'll have two strong portfolio pieces
 that cover the full range of systems programming in C++.
 
 ---
-*Last updated: Day 0 — Project defined, not started*
+*Last updated: Day 2 — Phase 2 completed*

@@ -1,6 +1,6 @@
 #include "logger.h"
 #include "config.h"
-#include "command_parser.h"
+#include <string>
 
 int main()
 {

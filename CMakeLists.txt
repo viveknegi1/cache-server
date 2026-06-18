@@ -14,6 +14,7 @@ add_executable(cache_server
     src/logger.cpp
     src/config.cpp
     src/command_parser.cpp
+    src/cache_store.cpp
 )
 target_include_directories(cache_server PRIVATE include)
 
