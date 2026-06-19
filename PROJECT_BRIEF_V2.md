@@ -108,7 +108,7 @@ cache-server/
 
 ## ✅ Current Status
 
-**Current Phase:** 2 
+**Current Phase:** 3 
 **Status:** completed
 
 ### Prerequisites before starting
@@ -139,7 +139,7 @@ cache-server/
 |---------|--------------------:|-------------|
 | Templates | 2 | — |
 | Move semantics | 2 | X |
-| `std::chrono` | 3 | — |
+| `std::chrono` | 3 | X |
 | `std::variant` | 1 | — |
 | Binary serialization | 4 | — |
 | Unit testing | 6 | — |
@@ -169,4 +169,4 @@ Combined with your HTTP server, you'll have two strong portfolio pieces
 that cover the full range of systems programming in C++.
 
 ---
-*Last updated: Day 2 — Phase 2 completed*
+*Last updated: Day 3 — Phase 3 completed*

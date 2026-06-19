@@ -1,14 +1,27 @@
 #include "cache_store.h"
+#include <optional>
 
-void CacheStore::set(std::string key, const std::string& value)
+void CacheStore::set(std::string key, std::string value, std::optional<int> ttlSeconds)
 {
-    {
+    {   
+        CacheStore::CacheEntry cacheData;
         std::lock_guard<std::mutex> lock(m_mutex);
-        m_store[std::move(key)] = std::move(value);
+        if(ttlSeconds != std::nullopt )
+        {
+            cacheData.expiryTime = std::chrono::steady_clock::now() + std::chrono::seconds(ttlSeconds.value()) ;
+            cacheData.hasExpiry = true;
+        }
+        else
+        {
+            cacheData.hasExpiry = false;
+        }
+        cacheData.value = std::move(value);
+        m_store[std::move(key)] = std::move(cacheData);
+    
     }
-   
+        
 }
-
+   
 std::optional<std::string> CacheStore::get(const std::string& key) const
 {
     
@@ -16,7 +29,10 @@ std::optional<std::string> CacheStore::get(const std::string& key) const
         std::lock_guard<std::mutex> lock(m_mutex);
         auto it = m_store.find(key);
         if(it != m_store.end()) {
-            return it->second;
+            if( it->second.hasExpiry == false || ( it->second.expiryTime > std::chrono::steady_clock::now()))
+            {
+                return it->second.value;
+            }
         }
     }
     return std::nullopt; 
@@ -67,4 +83,25 @@ void CacheStore::flush()
     }
    
 }
+
+
+void CacheStore::removeExpiredEntries()
+{
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto it = m_store.begin();
+        while(it != m_store.end()) 
+        {
+            if(it->second.hasExpiry == true && ( it->second.expiryTime < std::chrono::steady_clock::now())) 
+            {
+                it = m_store.erase(it);  // erase returns next valid iterator
+            } 
+            else 
+            {
+                ++it;  // only advance manually if we didn't erase
+            }
+        }
+    }
+}
+  
     
