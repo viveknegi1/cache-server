@@ -16,6 +16,7 @@ add_executable(cache_server
     src/command_parser.cpp
     src/cache_store.cpp
     src/ttl_manager.cpp
+    src/persistence.cpp
 )
 target_include_directories(cache_server PRIVATE include)
 

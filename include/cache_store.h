@@ -12,7 +12,7 @@ private:
     struct CacheEntry 
     {
         std::string value;
-        std::chrono::steady_clock::time_point expiryTime;
+        std::chrono::system_clock::time_point expiryTime;
         bool hasExpiry;  // some keys might never expire
     };
 
@@ -21,6 +21,14 @@ private:
     
 public:
 
+    struct CacheSnapShot 
+    {
+        std::string key;
+        std::string value;
+        std::chrono::system_clock::time_point expiryTime;
+        bool hasExpiry;
+    };  
+
     void set(std::string key, std::string value , std::optional<int> ttlSeconds = std::nullopt);
     std::optional<std::string> get(const std::string& key) const;
     bool del(const std::string& key) ; // should return whether something was actually deleted
@@ -28,4 +36,6 @@ public:
     std::vector<std::string> keys() const ;
     void flush() ;
     void removeExpiredEntries();
+    std::vector<CacheSnapShot> getSnapShot() const;
+    void restoreEntry(const CacheSnapShot& snapshot);
 }; 

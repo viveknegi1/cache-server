@@ -8,7 +8,7 @@ void CacheStore::set(std::string key, std::string value, std::optional<int> ttlS
         std::lock_guard<std::mutex> lock(m_mutex);
         if(ttlSeconds != std::nullopt )
         {
-            cacheData.expiryTime = std::chrono::steady_clock::now() + std::chrono::seconds(ttlSeconds.value()) ;
+            cacheData.expiryTime = std::chrono::system_clock::now() + std::chrono::seconds(ttlSeconds.value()) ;
             cacheData.hasExpiry = true;
         }
         else
@@ -18,8 +18,7 @@ void CacheStore::set(std::string key, std::string value, std::optional<int> ttlS
         cacheData.value = std::move(value);
         m_store[std::move(key)] = std::move(cacheData);
     
-    }
-        
+    }       
 }
    
 std::optional<std::string> CacheStore::get(const std::string& key) const
@@ -29,9 +28,9 @@ std::optional<std::string> CacheStore::get(const std::string& key) const
         std::lock_guard<std::mutex> lock(m_mutex);
         auto it = m_store.find(key);
         if(it != m_store.end()) {
-            if( it->second.hasExpiry == false || ( it->second.expiryTime > std::chrono::steady_clock::now()))
+            if( it->second.hasExpiry == false || ( it->second.expiryTime > std::chrono::system_clock::now()))
             {
-                return it->second.value;
+                return it->second.value; // Only return value with valid TTL or no expiry
             }
         }
     }
@@ -92,7 +91,7 @@ void CacheStore::removeExpiredEntries()
         auto it = m_store.begin();
         while(it != m_store.end()) 
         {
-            if(it->second.hasExpiry == true && ( it->second.expiryTime < std::chrono::steady_clock::now())) 
+            if(it->second.hasExpiry == true && ( it->second.expiryTime < std::chrono::system_clock::now())) 
             {
                 it = m_store.erase(it);  // erase returns next valid iterator
             } 
@@ -104,4 +103,43 @@ void CacheStore::removeExpiredEntries()
     }
 }
   
+
+std::vector<CacheStore::CacheSnapShot> CacheStore::getSnapShot() const
+{
+
+    std::vector<CacheStore::CacheSnapShot> cachedSnapShotList;
+
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        auto it = m_store.begin();
+        while(it != m_store.end()) 
+        {
+            
+            CacheStore::CacheSnapShot snapShot;
+            snapShot.key = it->first;
+            snapShot.value = it->second.value;
+            snapShot.expiryTime = it->second.expiryTime;
+            snapShot.hasExpiry =  it->second.hasExpiry;
+            cachedSnapShotList.push_back(snapShot);
+
+            ++it;
+        }
+
+    }
+    return cachedSnapShotList ;
+}
+
+
+void CacheStore::restoreEntry(const CacheStore::CacheSnapShot& snapshot)
+{
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        CacheStore::CacheEntry inComingCache;
+        inComingCache.value = snapshot.value;
+        inComingCache.expiryTime = snapshot.expiryTime;
+        inComingCache.hasExpiry = snapshot.hasExpiry;
+        m_store[snapshot.key] = inComingCache ;
+    }
+
+}
     

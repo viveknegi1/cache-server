@@ -51,8 +51,9 @@ Makefile
 *.log
 server.log
 
-#Project brief
+#other files
 PROJECT_BRIEF_V2.md
+cache.dat
 
 # Config (optional, but often ignored if sensitive)
 # config.ini

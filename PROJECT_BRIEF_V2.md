@@ -108,7 +108,7 @@ cache-server/
 
 ## ✅ Current Status
 
-**Current Phase:** 3 
+**Current Phase:** 4
 **Status:** completed
 
 ### Prerequisites before starting
@@ -130,7 +130,9 @@ cache-server/
 ---
 
 ## ⚠️ Mistakes / Rethinks Log
-*(filled in as we go)*
+1. We had decision to make on how TtlManager will invoke CacheStore's removeExpiredEntries(). There were 2 appraoches. Either we
+can make removeExpiredEntries() a public method or make TtlManager as friend class of CacheStore, enabling TtlManager to access private method removeExpiredEntries. Second approach would have made TtlManager and CacheStore closely coupled classes, which doesn't seems fine. So we made removeExpiredEntries() a public method. Any class can invoke removeExpiredEntries() by creating an object of CacheStore. 
+2. We made several decisions . Passing 'bool' hasExpiry in CacheSnapShot, which will be sent to Persistence class. We can calculat hasExpiry with ttl as well but that can lead to problems as then we will have to set ttl as Max time for no expiry keys . This doesn't seems fine. 
 
 ---
 
@@ -141,7 +143,7 @@ cache-server/
 | Move semantics | 2 | X |
 | `std::chrono` | 3 | X |
 | `std::variant` | 1 | — |
-| Binary serialization | 4 | — |
+| Binary serialization | 4 | X |
 | Unit testing | 6 | — |
 
 ---
@@ -169,4 +171,4 @@ Combined with your HTTP server, you'll have two strong portfolio pieces
 that cover the full range of systems programming in C++.
 
 ---
-*Last updated: Day 3 — Phase 3 completed*
+*Last updated: Day 4 — Phase 4 completed*
