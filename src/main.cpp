@@ -22,14 +22,13 @@ void signalHandler(int)
 
 int main()
 {
-    Config::getInstance("config.ini");
-    Logger::getInstance().log(Logger::Level::INFO, "Cache Server Started");
     CacheStore cacheStoreObj ;
+    
+    Config::getInstance("config.ini");
     int sweepInterval  = Config::getInstance().getSweepInterval();
     TtlManager ttlManagerObj(cacheStoreObj,sweepInterval);
-
     Persistence persistenceObj(cacheStoreObj);
-        persistenceObj.load("cache.dat");
+    persistenceObj.load("cache.dat");
 
     std::signal(SIGINT, signalHandler);
     int port = Config::getInstance("config.ini").getPort() ;
