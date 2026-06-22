@@ -108,7 +108,7 @@ cache-server/
 
 ## ✅ Current Status
 
-**Current Phase:** 4
+**Current Phase:** 5
 **Status:** completed
 
 ### Prerequisites before starting
@@ -171,4 +171,4 @@ Combined with your HTTP server, you'll have two strong portfolio pieces
 that cover the full range of systems programming in C++.
 
 ---
-*Last updated: Day 4 — Phase 4 completed*
+*Last updated: Day 5— Phase 5 completed*

@@ -8,11 +8,13 @@ public:
     int getPort() const ; 
     std::string getRootDirectory() const ; 
     int getThreadCount() const ;
+    int getSweepInterval() const;
 
 private:
     int m_port;
     int m_threadCount;
     std::string m_rootDirectory;
+    int m_sweepInterval;
     void parse(const std::string& configFilePath);
     Config(const std::string& configFilePath);
 

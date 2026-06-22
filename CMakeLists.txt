@@ -17,6 +17,8 @@ add_executable(cache_server
     src/cache_store.cpp
     src/ttl_manager.cpp
     src/persistence.cpp
+    src/response_builder.cpp
+    src/client_handler.cpp
 )
 target_include_directories(cache_server PRIVATE include)
 

@@ -38,6 +38,10 @@ Config& Config::getInstance(const std::string& configFilePath)
             {
                 m_rootDirectory = line.substr(eqaulToPosition+1) ;
             }
+            else if (line.substr(0, eqaulToPosition) == "sweep_interval") 
+            {
+                m_sweepInterval = std::stoi(line.substr(eqaulToPosition+1)) ;
+            }
             else
             {
                 Logger::getInstance().log(Logger::Level::INFO, "More keys present in config file");
@@ -60,4 +64,9 @@ std::string Config::getRootDirectory() const
 int Config::getThreadCount() const
 {
     return m_threadCount;
+}
+
+int Config::getSweepInterval() const
+{
+    return m_sweepInterval;
 }
