@@ -1,7 +1,5 @@
 #include "response_builder.h"
 
-
-
 std::string ResponseBuilder::success()
 {
     return "OK\n";

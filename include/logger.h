@@ -1,6 +1,7 @@
 #pragma once
-#include <mutex>
+
 #include <fstream>
+#include <mutex>
 #include <string>
 
 class Logger {

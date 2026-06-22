@@ -1,8 +1,9 @@
 #include "tcp_listener.h"
-#include <sys/socket.h> //   socket(), bind(), listen(), accept()
-#include <netinet/in.h> // sockaddr_in struct
-#include <unistd.h> // close()
+
 #include "logger.h"
+#include <netinet/in.h> // sockaddr_in struct
+#include <sys/socket.h> //   socket(), bind(), listen(), accept()
+#include <unistd.h> // close()
 
 TcpListener::TcpListener(int port) {
     m_port = port;

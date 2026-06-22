@@ -1,9 +1,10 @@
 #include "client_handler.h"
+
+#include <charconv>
+#include "command_parser.h"
+#include "logger.h"
 #include "response_builder.h"
 #include <sys/socket.h>
-#include "logger.h"
-#include "command_parser.h"
-#include <charconv>
 
  ClientHandler::ClientHandler(int clientFd ,CacheStore& cacheStoreRef , Persistence& persistenceRef) : m_cacheStore(cacheStoreRef), m_persistence(persistenceRef)
  {
@@ -40,7 +41,6 @@ std::string ClientHandler::handleFlush()
 {
     m_cacheStore.flush();
     return ResponseBuilder::success();
-
 }
 
 std::string ClientHandler::handleGetKeys()
@@ -57,63 +57,62 @@ std::string ClientHandler::handleExists(const std::string& key)
    
 void ClientHandler::run()
 {
-
-    while(true){
-
-    char buffer[4096]; 
-    int bytesReceived = recv(m_clientFd, buffer, sizeof(buffer), 0); 
-    if(bytesReceived == -1)
+    while(true)
     {
-        Logger::getInstance().log(Logger::Level::ERROR, "Insufficient Data received from client request");
-        return ;
 
-    }
-    else if (bytesReceived == 0)
-    {
-        Logger::getInstance().log(Logger::Level::ERROR, "Client Disconnected");
-        return ;
-
-    } 
-        
-    else
-    {
-        std::string bufferString(buffer, bytesReceived);
-        auto parsedResult = CommandParser::parse(bufferString);
-        auto methodType = parsedResult.type ;
-        auto argumentList = parsedResult.args ;
-        std::string response ;
-        switch (methodType)
+        char buffer[4096]; 
+        int bytesReceived = recv(m_clientFd, buffer, sizeof(buffer), 0); 
+        if(bytesReceived == -1)
         {
-            case  CommandParser::CommandType::SET:
-                {
-                    if(argumentList.empty() || argumentList.size() == 1)
+            Logger::getInstance().log(Logger::Level::ERROR, "Insufficient Data received from client request");
+            return ;
+
+        }
+        else if (bytesReceived == 0)
+        {
+            Logger::getInstance().log(Logger::Level::ERROR, "Client Disconnected");
+            return ;
+        } 
+        
+        else
+        {
+            std::string bufferString(buffer, bytesReceived);
+            auto parsedResult = CommandParser::parse(bufferString);
+            auto methodType = parsedResult.type ;
+            auto argumentList = parsedResult.args ;
+            std::string response ;
+            switch (methodType)
+            {
+                case  CommandParser::CommandType::SET:
                     {
-                        response =  ResponseBuilder::error("Arguments are fewer than expected");
-                        
-                    }
-                    else
-                    {
-                        auto key = argumentList.at(0);
-                        auto value = argumentList.at(1);
-                        std::optional<int> ttl = std::nullopt;
-                        if (argumentList.size() > 2)
+                        if(argumentList.empty() || argumentList.size() == 1)
                         {
-                            int ttlInt ; 
-                            auto str = argumentList[2];
-                            auto ttlString = std::from_chars(str.data(), str.data() + str.size(), ttlInt);
-                            if (ttlString.ec == std::errc())
-                            { 
-                                ttl = ttlInt; 
+                            response =  ResponseBuilder::error("Arguments are fewer than expected");
+                        
+                        }
+                        else
+                        {
+                            auto key = argumentList.at(0);
+                            auto value = argumentList.at(1);
+                            std::optional<int> ttl = std::nullopt;
+                            if (argumentList.size() > 2)
+                            {
+                                int ttlInt ; 
+                                auto str = argumentList[2];
+                                auto ttlString = std::from_chars(str.data(), str.data() + str.size(), ttlInt);
+                                if (ttlString.ec == std::errc())
+                                { 
+                                    ttl = ttlInt; 
+                                }
                             }
+
+                            response = handleSet(key, value, ttl);
                         }
 
-                        response = handleSet(key, value, ttl);
+                        break;    
                     }
 
-                    break;    
-                }
-
-            case CommandParser::CommandType::GET:
+                case CommandParser::CommandType::GET:
                 {
                     if(argumentList.empty())
                     {
@@ -128,7 +127,7 @@ void ClientHandler::run()
                     break;
                 }
 
-            case CommandParser::CommandType::DEL:
+                case CommandParser::CommandType::DEL:
                 {
                     if(argumentList.empty())
                     {
@@ -142,7 +141,7 @@ void ClientHandler::run()
                     break;
                 }
 
-            case CommandParser::CommandType::EXISTS:
+                case CommandParser::CommandType::EXISTS:
                 {
                     if(argumentList.empty())
                     {
@@ -156,43 +155,46 @@ void ClientHandler::run()
                     }
                     break;
                 }
-            case CommandParser::CommandType::FLUSH:
-                response =  handleFlush();
-                break;
-            case CommandParser::CommandType::SAVE:
+                case CommandParser::CommandType::FLUSH:
+                    response =  handleFlush();
+                    break;
+                case CommandParser::CommandType::SAVE:
                 {
                     m_persistence.save("cache.dat");  
                     response = ResponseBuilder::success();
                     break;
                 }
-            case CommandParser::CommandType::KEYS:
-                response = handleGetKeys();
-                break;
-            case CommandParser::CommandType::UNKNOWN:
-                response = ResponseBuilder::error("Unknown command");
-                break;
-            default: 
-                response = ResponseBuilder::error("Unknown command");
-                break;
+                case CommandParser::CommandType::KEYS:
+                    response = handleGetKeys();
+                    break;
+                case CommandParser::CommandType::UNKNOWN:
+                    response = ResponseBuilder::error("Unknown command");
+                    break;
+                default: 
+                    response = ResponseBuilder::error("Unknown command");
+                    break;
 
-        }
+            }
 
           auto byteSent = send(m_clientFd, response.c_str(), response.size(), 0);
-          if (byteSent == -1) {
-            Logger::getInstance().log(Logger::Level::ERROR, "Socket Error");
-            return ;
+          if (byteSent == -1) 
+          {
+                Logger::getInstance().log(Logger::Level::ERROR, "Socket Error");
+                return ;
           } 
-          else if (byteSent == 0) {
-            Logger::getInstance().log(Logger::Level::ERROR, "Client disconnected. Connection closed");
-            return ;
+          else if (byteSent == 0) 
+          {
+                Logger::getInstance().log(Logger::Level::ERROR, "Client disconnected. Connection closed");
+                return ;
 
           } 
-          else {
+          else 
+          {
                 auto totalBytesSent = std::to_string(byteSent);
                 Logger::getInstance().log(Logger::Level::INFO, "Sent " + totalBytesSent + " bytes");
           }
             
-     }
+        }
     }
     
 }

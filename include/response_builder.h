@@ -1,11 +1,9 @@
 #pragma once
+
 #include <string>
 #include <vector>
 
 class ResponseBuilder{
-
-private:
-  
 
 public:
     static std::string success();

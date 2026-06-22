@@ -1,16 +1,41 @@
 #include "command_parser.h"
+
 #include <string>
 
 CommandParser::CommandType stringToCommandType(const std::string& commandString)
 {
-    if(commandString == "SET") return CommandParser::CommandType::SET;
-    else if(commandString == "GET") return CommandParser::CommandType::GET;
-    else if(commandString == "DEL") return CommandParser::CommandType::DEL;
-    else if(commandString == "EXISTS") return CommandParser::CommandType::EXISTS;
-    else if(commandString == "KEYS") return CommandParser::CommandType::KEYS;
-    else if(commandString == "FLUSH") return CommandParser::CommandType::FLUSH;
-    else if(commandString == "SAVE") return CommandParser::CommandType::SAVE;
-    else return CommandParser::CommandType::UNKNOWN;
+    if(commandString == "SET")
+    { 
+        return CommandParser::CommandType::SET;
+    }
+    else if(commandString == "GET") 
+    {
+        return CommandParser::CommandType::GET;
+    }
+    else if(commandString == "DEL") 
+    {
+        return CommandParser::CommandType::DEL;
+    }
+    else if(commandString == "EXISTS") 
+    {
+        return CommandParser::CommandType::EXISTS;
+    }
+    else if(commandString == "KEYS") 
+    {
+        return CommandParser::CommandType::KEYS;
+    }
+    else if(commandString == "FLUSH") 
+    {
+        return CommandParser::CommandType::FLUSH;
+    }
+    else if(commandString == "SAVE") 
+    {
+        return CommandParser::CommandType::SAVE;
+    }
+    else 
+    {
+        return CommandParser::CommandType::UNKNOWN;
+    }
 } 
 
 CommandParser::ParsedCommand CommandParser::parse(const std::string& rawCommandString)
@@ -18,7 +43,8 @@ CommandParser::ParsedCommand CommandParser::parse(const std::string& rawCommandS
     CommandParser::ParsedCommand parsedResult;
     std::string cleanedString = rawCommandString;
     // Raw strings can have '\r\n at the end. So cleaning up them for better parsing
-    while (!cleanedString.empty() && (cleanedString.back() == '\n' || cleanedString.back() == '\r')) {
+    while (!cleanedString.empty() && (cleanedString.back() == '\n' || cleanedString.back() == '\r')) 
+    {
         cleanedString.pop_back();
     }
 

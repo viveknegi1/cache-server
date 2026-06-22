@@ -22,8 +22,9 @@ public :
     std::vector<std::string> args;
     } ;
 
-    // since this method won't touch any class members, make it statics so that we don't object to invoke this.
+    // since this method won't touch any class members, make it statics so that we don't create object to invoke this.
     static ParsedCommand parse(const std::string& rawCommandString); 
+
 };
 
 

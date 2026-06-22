@@ -1,12 +1,12 @@
 #pragma once
-#include "cache_store.h"
-#include <thread>
+
 #include <atomic>
+#include "cache_store.h"
 #include <condition_variable>
 #include <mutex>
+#include <thread>
 
 class TtlManager {
-
 
 private:
     CacheStore& m_cacheStore; 
@@ -15,7 +15,6 @@ private:
     int m_sweepIntervalSeconds ;
     std::mutex m_mutex;
     std::condition_variable m_condition;
-
 
 public: 
     TtlManager(CacheStore& cacheStoreObj , int sweepIntervalSeconds);

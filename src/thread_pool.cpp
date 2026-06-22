@@ -1,6 +1,6 @@
 #include "thread_pool.h"
-#include <sys/socket.h>
 
+#include <sys/socket.h>
 
 ThreadPool::ThreadPool(int threadCount)
 {
