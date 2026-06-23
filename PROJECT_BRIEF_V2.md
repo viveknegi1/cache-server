@@ -108,7 +108,7 @@ cache-server/
 
 ## ✅ Current Status
 
-**Current Phase:** 5
+**Current Phase:** 7
 **Status:** completed
 
 ### Prerequisites before starting
@@ -139,12 +139,12 @@ can make removeExpiredEntries() a public method or make TtlManager as friend cla
 ## 🔖 C++ Concepts — Status
 | Concept | Introduced in Phase | Understood? |
 |---------|--------------------:|-------------|
-| Templates | 2 | — |
+| Templates | 2 | X | Using unordered_map. 
 | Move semantics | 2 | X |
 | `std::chrono` | 3 | X |
 | `std::variant` | 1 | — |
 | Binary serialization | 4 | X |
-| Unit testing | 6 | — |
+| Unit testing | 6 | X |
 
 ---
 
@@ -171,4 +171,4 @@ Combined with your HTTP server, you'll have two strong portfolio pieces
 that cover the full range of systems programming in C++.
 
 ---
-*Last updated: Day 5— Phase 5 completed*
+*Last updated: Day 7— Phase 7 completed. Project completed*
