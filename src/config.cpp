@@ -14,7 +14,6 @@ Config& Config::getInstance(const std::string& configFilePath)
     return instance;
 }
 
-
  void Config::parse(const std::string& configFilePath)
  {
     std::ifstream file(configFilePath);

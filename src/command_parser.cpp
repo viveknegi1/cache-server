@@ -48,9 +48,17 @@ CommandParser::ParsedCommand CommandParser::parse(const std::string& rawCommandS
         cleanedString.pop_back();
     }
 
+    bool isOnlySpaces = (cleanedString.find_first_not_of(" \t") == std::string::npos);
+
     size_t firstSpacePos = cleanedString.find(' ');
     std::string commandString = cleanedString.substr(0, firstSpacePos);
     auto command = stringToCommandType(commandString);
+
+    if (isOnlySpaces) {
+        parsedResult.type = command;
+        return parsedResult ;
+    }
+
 
     if(firstSpacePos == std::string::npos) 
     {

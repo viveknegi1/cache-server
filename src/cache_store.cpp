@@ -84,7 +84,6 @@ void CacheStore::flush()
    
 }
 
-
 void CacheStore::removeExpiredEntries()
 {
     {
@@ -104,7 +103,6 @@ void CacheStore::removeExpiredEntries()
     }
 }
   
-
 std::vector<CacheStore::CacheSnapShot> CacheStore::getSnapShot() const
 {
 
@@ -129,7 +127,6 @@ std::vector<CacheStore::CacheSnapShot> CacheStore::getSnapShot() const
     }
     return cachedSnapShotList ;
 }
-
 
 void CacheStore::restoreEntry(const CacheStore::CacheSnapShot& snapshot)
 {

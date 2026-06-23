@@ -21,4 +21,12 @@ add_executable(cache_server
     src/client_handler.cpp
 )
 target_include_directories(cache_server PRIVATE include)
-
+find_package(Catch2 3 REQUIRED)
+add_executable(cache_tests 
+    tests/test_command_parser.cpp
+    tests/test_cache_store.cpp
+    src/command_parser.cpp
+    src/cache_store.cpp
+)
+target_link_libraries(cache_tests PRIVATE Catch2::Catch2WithMain)
+target_include_directories(cache_tests PRIVATE include)

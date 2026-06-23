@@ -6,7 +6,6 @@
 Persistence::Persistence(CacheStore& cacheStoreObj) : m_cacheStore(cacheStoreObj)
 {
 
-
 }
 
 void Persistence::save(const std::string& filePath)
@@ -40,7 +39,6 @@ void Persistence::save(const std::string& filePath)
 
 void Persistence::load(const std::string& filePath)
 {
-
     CacheStore::CacheSnapShot snapshot;
    
     std::ifstream file(filePath, std::ios::binary);
@@ -51,8 +49,6 @@ void Persistence::load(const std::string& filePath)
     }
 
     uint32_t len; 
-
-    // The loop works exactly the same
     while (file.read(reinterpret_cast<char*>(&len), sizeof(len))) {
         
         // Read Key 

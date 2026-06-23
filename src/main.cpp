@@ -69,6 +69,7 @@ int main()
         });
     }
 
+    persistenceObj.save("cache.dat");
     Logger::getInstance().log(Logger::Level::INFO, "Server Shutting Down");
     return 0;
 

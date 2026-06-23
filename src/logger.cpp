@@ -16,7 +16,6 @@ Logger& Logger::getInstance()
 
 void Logger::log(Logger::Level level , const std::string& message)
 {
-
     auto now = std::time(nullptr);
     auto timeStr = std::string(std::ctime(&now));
     timeStr.pop_back();  // remove trailing newline that ctime adds

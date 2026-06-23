@@ -59,7 +59,7 @@ void ClientHandler::run()
 {
     while(true)
     {
-
+        // Receive input from client and parse it
         char buffer[4096]; 
         int bytesReceived = recv(m_clientFd, buffer, sizeof(buffer), 0); 
         if(bytesReceived == -1)
@@ -73,7 +73,6 @@ void ClientHandler::run()
             Logger::getInstance().log(Logger::Level::ERROR, "Client Disconnected");
             return ;
         } 
-        
         else
         {
             std::string bufferString(buffer, bytesReceived);
@@ -175,7 +174,7 @@ void ClientHandler::run()
                     break;
 
             }
-
+          // Send data to client  
           auto byteSent = send(m_clientFd, response.c_str(), response.size(), 0);
           if (byteSent == -1) 
           {
